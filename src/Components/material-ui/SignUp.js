@@ -75,51 +75,102 @@ const theme = createMuiTheme({
 
 class MediaCard extends Component {
   state = {
-    name: "",
-    title: "",
-    description: "",
+    f_name: "",
+    l_name: "",
+    email: "",
+    password: "",
+    c_password: "",
     data: []
   };
 
-  handleOnChange = event => {
+
+  handleF_nameChange = event => {
     this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
+      f_name: event.target.value
+    })
+  }
+  handleL_nameChange = event => {
+    this.setState({
+      l_name: event.target.value
+    })
+  }
+  handleEmailChange = event => {
+    this.setState({
+      email: event.target.value
+    })
+  }
+  handlePasswordChange = event => {
+    this.setState({
+      password: event.target.value
+    })
+  }
+  handleC_passwordChange = event => {
+    this.setState({
+      c_password: event.target.value
+    })
+  }
+
 
   handleOnClick = () => {
-    let { name, title, description, data } = this.state; //object destructing
-    let obj = { name, title, description };
+
+    
+
+    let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
+    let obj = { f_name, l_name, email, password, c_password };
     data.push(obj);
+    
     this.setState({
       data
     });
-  };
+ 
+   var url = 'http://localhost:8000/signup'
+               
+      console.log(obj)
+                       debugger
+                        fetch(url, {
+                                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                                headers: {
+                                        "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(obj), // body data type must match "Content-Type" header
+                                
+                        }).then((response) => {
+                          debugger
+                                return response.json()
+                        }).then((response) => {
+                                if (response.status == 200) {
+                                        console.log('record has been insert succuss', response.data)
+                                        alert("you have successfuly signed up");
+                                     //   window.location.href="/index.html";
+                                     
+                                }
+                                else { // when error
+                                        console.log('record is not inserted Error: ', response.error)
+                                        
+                                        
+                                        if(response.error.code=="ER_DUP_ENTRY")
+                                        {
+                                                alert("This email id is alredy resgisterd");
+                                        }
 
-  handleOnDelete = index => {
-    let data = this.state.data;
-    data.splice(index, 1);
-    this.setState({
-      data: data
-    });
-  };
-  fEdit = i => {
-    let { name, title, description, data } = this.state; //object destructing
+                                        
+                                }
+                                // alert('Record has been insert successfully')
+                        }).catch((err) => {
+                                console.log('Error occured in insertion', err)
+                                // alert('Error in insertion')
+                        }) // parses response to JSON
+                
 
-    let obj = { name, title, description };
-    data.filter(obj)
-    this.setState({
-      data: data[i]
-    });
-  };
 
+    
+  };
 
 
 
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.data)
 
     return (
       <div>
@@ -135,8 +186,8 @@ class MediaCard extends Component {
                   className={classes.margin}
                   label="First Name"
                   name="name"
-                  value={this.state.name}
-                  onChange={this.handleOnChange}
+                  value={this.state.f_name}
+                  onChange={this.handleF_nameChange}
                   placeholder="First Name"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
@@ -148,8 +199,8 @@ class MediaCard extends Component {
                   className={classes.margin}
                   label="Last Name"
                   name="name"
-                  value={this.state.name}
-                  onChange={this.handleOnChange}
+                  value={this.state.l_name}
+                  onChange={this.handleL_nameChange}
                   placeholder="Last Name"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
@@ -163,8 +214,8 @@ class MediaCard extends Component {
                   className={classes.margin}
                   label="Email"
                   name="name"
-                  value={this.state.name}
-                  onChange={this.handleOnChange}
+                  value={this.state.email}
+                  onChange={this.handleEmailChange}
                   placeholder="Email"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
@@ -177,9 +228,9 @@ class MediaCard extends Component {
                 <TextField
                   className={classes.margin}
                   label="Password"
-                  name="title"
-                  value={this.state.title}
-                  onChange={this.handleOnChange}
+                  name="name"
+                  value={this.state.password}
+                  onChange={this.handlePasswordChange}
                   placeholder="Password"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
@@ -192,9 +243,9 @@ class MediaCard extends Component {
                 <TextField
                   className={classes.margin}
                   label="Confirm Password"
-                  name="title"
-                  value={this.state.title}
-                  onChange={this.handleOnChange}
+                  name="name"
+                  value={this.state.c_password}
+                  onChange={this.handleC_passwordChange}
                   placeholder="Confirm Password"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
@@ -209,69 +260,11 @@ class MediaCard extends Component {
             color="primary"
             className={classes.button}
             onClick={this.handleOnClick}         >
-            Sign In
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.button}
-          >
             Sign Up
           </Button>
+        
         </Card>
-        {/* {this.state.data.map(item => {
-          return (
-            <div>
-              <List className={classes.list} container justify="center"> 
-                <ListItem alignItems="flex-center">
-                  <ListItemAvatar>
-                    <Grid alignItems="center">
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="\material-ui\img\idea.jpg"
-                        className={classes.avatar}
-                      />
-                    </Grid>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={item.name}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          component="span"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {item.title}
-                        </Typography>
-                        <br />
-                        {item.description}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={this.handleOnClick}
-                  size="small"
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  size="small"
-                  onClick={this.handleOnDelete}
-                >
-                  Delete
-                </Button>
-              </List>
-            </div>
-          );
-        })}*/}
+     }
       </div> 
     );
   }
