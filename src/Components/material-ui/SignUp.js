@@ -111,18 +111,26 @@ class MediaCard extends Component {
   }
 
 
-  handleOnClick = () => {
+  handleOnClick = (e) => {
 
-    
+   
+      
+     
 
-    let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
-    let obj = { f_name, l_name, email, password, c_password };
+    let { f_name, l_name, email, password,c_password,data } = this.state; //object destructing
+    let obj = { f_name, l_name, email, password,c_password};
     data.push(obj);
+    
     
     this.setState({
       data
     });
  
+    if(this.state.password != this.state.c_password){
+      alert("Passwords don't match");
+    }
+    
+    else{
    var url = 'http://localhost:8000/signup'
                
       console.log(obj)
@@ -160,8 +168,16 @@ class MediaCard extends Component {
                                 console.log('Error occured in insertion', err)
                                 // alert('Error in insertion')
                         }) // parses response to JSON
-                
-
+          }
+                        
+                        e.preventDefault();
+                        this.setState({
+                          f_name:'',
+                          l_name:'',
+                          email:'',
+                          password:'',
+                          c_password:''
+                        });
 
     
   };

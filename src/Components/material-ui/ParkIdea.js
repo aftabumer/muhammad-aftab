@@ -72,11 +72,15 @@ const theme = createMuiTheme({
 class MediaCard extends Component {
   constructor(props) {
     super(props)
-  
+
+   var user_id= window.localStorage.getItem('user_id')
+   var user_name=window.localStorage.getItem('f_name')
+
     this.state = {
-      name: "",
+      name: user_name,
       title: "",
       description: "",
+      user_id: user_id,
       data: []
     }
   }
@@ -88,9 +92,51 @@ class MediaCard extends Component {
   };
 
   handleOnClick = () => {
-    let { name, title, description, data } = this.state; //object destructing
-    let obj = { name, title, description, editStatus: false}
+   
+ 
+    
+    let { user_id, name, title, description, data } = this.state; //object destructing
+    let obj = { user_id, name, title, description, editStatus: false}
     data.push(obj);
+  
+    var url = 'http://localhost:8000/parkIdea'
+               
+      console.log(obj)
+                       
+                        fetch(url, {
+                                method: "POST", // *GET, POST, PUT, DELETE, etc.
+                                headers: {
+                                        "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(obj), // body data type must match "Content-Type" header
+                                
+                        }).then((response) => {
+                          
+                                return response.json()
+                        }).then((response) => {
+                                if (response.status == 200) {
+                                        console.log('record has been insert succuss', response.data)
+                                        alert("you have successfuly parked your idea");
+                                     //   window.location.href="/index.html";
+                                     
+                                }
+                                else { // when error
+                                        console.log('record is not inserted Error: ', response.error)
+                                        
+                                        alert("your idea is not parked successfuly");
+                                        if(response.error.code=="ER_DUP_ENTRY")
+                                        {
+                                                alert("This email id is alredy resgisterd");
+                                        }
+
+                                        
+                                }
+                                // alert('Record has been insert successfully')
+                        }).catch((err) => {
+                                console.log('Error occured in insertion', err)
+                                // alert('Error in insertion')
+                        }) // parses response to JSON
+
     this.setState({
       data,
       name:'',
@@ -135,8 +181,11 @@ class MediaCard extends Component {
                   onChange={this.handleOnChange}
                   placeholder="Name"
                   variant="outlined"
-                  id="mui-theme-provider-outlined-input"
+                  id="filled-read-only-input"
                   fullWidth
+                  InputProps={{
+                    readOnly: true,
+                    }}
                 />
               </MuiThemeProvider>
 
@@ -225,6 +274,7 @@ class MediaCard extends Component {
                   />
                 </ListItem>
                 <Button
+                
                   variant="contained"
                   color="primary"
                   className={classes.button}

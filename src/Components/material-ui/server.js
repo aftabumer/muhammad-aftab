@@ -27,9 +27,54 @@ connection.connect(function (err) {
 //app.get('/', (req, res) => res.send('Hello World!'))
 
 app.post('/signup', (req, res) => {
-    let { f_name, l_name, email, password, c_password, } = req.body
+    let { f_name, l_name, email, password,} = req.body
 
-    var sql = `INSERT INTO signup (f_name, l_name, email,password,confirm_password) VALUES ('${f_name}', '${l_name}','${email}','${password}','${c_password}')`;
+    var sql = `INSERT INTO signup (f_name, l_name, email,password) VALUES ('${f_name}', '${l_name}','${email}','${password}')`;
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.log('Errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+            res.status(500).send(JSON.stringify({ error: err, status: 500 }))
+        } else {
+            console.log("1 record inserted");
+            res.status(200).send({ data: req.body, status: 200 })
+        }
+    });
+})
+
+app.post('/signin', (req, res) => {
+    let {
+        email,
+        password } = req.body
+
+    //  var sql = 'SELECT * FROM customers WHERE address = ' + mysql.escape(adr);
+    var sql = 'SELECT * FROM signup WHERE email = ' + mysql.escape(email) + 'and password= ' + mysql.escape(password);
+    //  var sql ='SELECT * FROM signup WHERE email_id = ? and password= ?';
+
+    connection.query(sql, [email][password], (err, result) => {
+        if (err) {
+            console.log('Errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+            res.status(500).send(JSON.stringify({ error: err, status: 500 }))
+        }
+        else {
+            if (result.length > 0) {
+                console.log("loign success");
+                res.status(200).send({ data: result[0], status: 200 })
+            }
+            else {
+                console.log("email and pass dont match");
+                res.status(500).send({ error: 'email and pass dont match', status: 204 })
+                //res.status(204).send({ data: req.body, status: 204 })
+            }
+        }
+
+    });
+})
+
+
+app.post('/parkIdea', (req, res) => {
+    let { user_id, name, title, description,} = req.body
+
+    var sql = `INSERT INTO idea (user_id, user_name, idea_title, description) VALUES ('${user_id}', '${name}','${title}','${description}')`;
     connection.query(sql, (err, result) => {
         if (err) {
             console.log('Errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
