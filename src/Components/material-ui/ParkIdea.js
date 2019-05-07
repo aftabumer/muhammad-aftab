@@ -45,9 +45,9 @@ const styles = theme => ({
     // backgroundColor: 'pink'
   },
   list: {
-    maxWidth: 'auto',
+    maxWidth: "auto",
     // backgroundColor: theme.palette.background.paper
-    backgroundColor: "pink",
+    backgroundColor: "pink"
   },
   margin: {
     margin: theme.spacing.unit
@@ -71,16 +71,19 @@ const theme = createMuiTheme({
 
 class MediaCard extends Component {
   constructor(props) {
-    super(props)
-  
+    super(props);
+
     this.state = {
       name: "",
       title: "",
       description: "",
-      data: []
-    }
+      data: [],
+      e_name: "",
+      e_title: "",
+      e_description: ""
+    };
   }
-  
+
   handleOnChange = event => {
     this.setState({
       [event.target.name]: event.target.value
@@ -89,14 +92,19 @@ class MediaCard extends Component {
 
   handleOnClick = () => {
     let { name, title, description, data } = this.state; //object destructing
-    let obj = { name, title, description, editStatus: false}
-    data.push(obj);
-    this.setState({
-      data,
-      name:'',
-      title:'',
-      description:'',
-    });
+    let obj = { name, title, description, editStatus: false };
+
+    if (name !== "" && title !== "" && description !== "") {
+      data.push(obj);
+      this.setState({
+        data,
+        name: "",
+        title: "",
+        description: ""
+      });
+    } else {
+      alert("plz fill the field");
+    }
   };
 
   handleOnDelete = index => {
@@ -107,16 +115,33 @@ class MediaCard extends Component {
     });
   };
 
-  handleEdit = index =>{
-    let data = this.state.data.map((item, i) => i === index ? {...item, editStatus: true} : item);
+  handleEdit = index => {
+    let data = this.state.data.map((item, i) =>
+      i === index ? { ...item, editStatus: true } : item
+    );
 
-    this.setState({data});
-  }
+    this.setState({ data });
+  };
 
+  handleSave = index => {
+    let data = this.state.data.map((item, i) =>
+      i === index
+        ? {
+            ...item,
+            editStatus: false,
+            name: this.state.e_name,
+            title: this.state.e_title,
+            description: this.state.e_description
+          }
+        : item
+    );
+
+    this.setState({ data });
+  };
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.data)
+    console.log(this.state.data);
 
     return (
       <div>
@@ -195,7 +220,7 @@ class MediaCard extends Component {
               <p>{item.title}</p>
               <p>{item.description}</p> */}
 
-              <List className={classes.list} container justify="center"> 
+              <List className={classes.list} container justify="center">
                 <ListItem alignItems="flex-center">
                   <ListItemAvatar>
                     <Grid alignItems="center">
@@ -207,7 +232,17 @@ class MediaCard extends Component {
                     </Grid>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={item.name}
+                    primary={
+                      item.editStatus ? (
+                        <input
+                          name="e_name"
+                          value={this.state.e_name}
+                          onChange={this.handleOnChange}
+                        />
+                      ) : (
+                        item.name
+                      )
+                    }
                     secondary={
                       <React.Fragment>
                         <Typography
@@ -215,23 +250,42 @@ class MediaCard extends Component {
                           className={classes.inline}
                           color="textPrimary"
                         >
-                          {item.title}
+                          {item.editStatus ? (
+                            <input
+                              name="e_title"
+                              value={this.state.e_title}
+                              onChange={this.handleOnChange}
+                            />
+                          ) : (
+                            item.title
+                          )}
                         </Typography>
                         <br />
-                        {item.description}
+                        {item.editStatus ? (
+                          <input
+                            name="e_description"
+                            value={this.state.e_description}
+                            onChange={this.handleOnChange}
+                          />
+                        ) : (
+                          item.description
+                        )}
                       </React.Fragment>
                     }
-               
                   />
                 </ListItem>
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  onClick={() => this.handleEdit(i)}
+                  onClick={
+                    item.editStatus
+                      ? () => this.handleSave(i)
+                      : () => this.handleEdit(i)
+                  }
                   size="small"
                 >
-                  Edit
+                  {item.editStatus ? "Save" : "Edit"}
                 </Button>
                 <Button
                   variant="contained"

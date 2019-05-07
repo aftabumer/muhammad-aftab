@@ -3,6 +3,9 @@ import ParkIdea from "./Components/material-ui/ParkIdea";
 import SignIn from "./Components/material-ui/SignIn";
 import SignUp from "./Components/material-ui/SignUp";
 import Header from "./Components/material-ui/Header";
+import Model from "./Components/material-ui/Model";
+
+
 
 // using ES6 modules
 import { BrowserRouter, Route } from "react-router-dom";
@@ -29,7 +32,7 @@ class App extends Component {
     return (
       <div className="App">
       <BrowserRouter>
-      <Header authenticated = {this.state.authenticated} />
+      <Header authenticated = {this.state.authenticated}/>
       <Route exact path='/SignIn' component={SignIn} />
       <Route exact path='/SignUp' component={SignUp} />
       <Route exact path='/ParkIdea' component={ParkIdea} />
@@ -39,6 +42,8 @@ class App extends Component {
         {/* <ParkIdea /> */}
         {/* <Header />   */}
         </BrowserRouter>
+
+        {/* <Model /> */}
       </div>
     );
   }

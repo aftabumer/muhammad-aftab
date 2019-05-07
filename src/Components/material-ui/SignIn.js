@@ -32,7 +32,6 @@ const styles = theme => ({
 
   button: {
     margin: theme.spacing.unit
-    
   },
   input: {
     display: "none"
@@ -46,9 +45,9 @@ const styles = theme => ({
     // backgroundColor: 'pink'
   },
   list: {
-    maxWidth: 'auto',
+    maxWidth: "auto",
     // backgroundColor: theme.palette.background.paper
-    backgroundColor: "pink",
+    backgroundColor: "pink"
   },
   margin: {
     margin: theme.spacing.unit
@@ -72,85 +71,66 @@ const theme = createMuiTheme({
 
 class MediaCard extends Component {
   state = {
-    name: "",
-    title: "",
-    description: "",
+    email: "",
+    password: "",
     data: []
   };
 
-  // handleOnChange = event => {
-  //   this.setState({
-  //     [event.target.name]: event.target.value
-  //   });
-  // };
+  handleEmailChange = event => {
+    this.setState({
+      email: event.target.value
+    });
+  };
+  handlePasswordChange = event => {
+    this.setState({
+      password: event.target.value
+    });
+  };
 
-  // handleOnClick = () => {
-  //   let { name, title, description, data } = this.state; //object destructing
-  //   let obj = { name, title, description };
-  //   data.push(obj);
-  //   this.setState({
-  //     data
-  //   });
-  // };
+  handleOnClick = () => {
+    let { email, password, data } = this.state; //object destructing
+    let obj = { email, password };
 
-  // handleOnDelete = index => {
-  //   let data = this.state.data;
-  //   data.splice(index, 1);
-  //   this.setState({
-  //     data: data
-  //   });
-  // };
-  // fEdit = i => {
-  //   let { name, title, description, data } = this.state; //object destructing
-
-  //   let obj = { name, title, description };
-  //   data.filter(obj)
-  //   this.setState({
-  //     data: data[i]
-  //   });
-  // };
-
-    constructor(props) {
-      super(props)
-         this.authWithEmailPassword = this.authWithEmailPassword.bind(this)
+    if (email !== "" && password !== "") {
+      data.push(obj);
+      this.setState({
+        
+        data,
+        email: "",
+        password: ""
+      });
+    } else {
+      alert("plz fill the field");
     }
-    
-    
-    authWithEmailPassword(event) {
-      event.preventDefault()
-      console.log("authed with Email")
-      console.table([{
-        email: this.emailInput.value,
-        password: this.passwordInput.value
-      }])
-    }
-
-
+  };
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.data)
+    console.log(this.state.data);
 
     return (
       <div>
-        <Card className={classes.card} onSubmit={(event) => { this.authWithEmailPassword(event)}} ref={(Card) => {this.loginForm = Card}}>
+        <Card className={classes.card}>
           <h2>Sign In</h2>
 
           <CardContent>
-            {/* <Form /> */}
+            
             <div className={classes.root}>
               <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
                   label="Email"
                   name="name"
-                  ref={(TextField) => {this.emailInput = TextField}}
-                  onChange={this.handleOnChange}
+                  ref={TextField => {
+                    this.emailInput = TextField;
+                  }}
+                  value={this.state.email}
+                  onChange={this.handleEmailChange}
                   placeholder="Email"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='email'
+                  type="email"
                 />
               </MuiThemeProvider>
 
@@ -159,13 +139,16 @@ class MediaCard extends Component {
                   className={classes.margin}
                   label="Password"
                   name="title"
-                  ref={(TextField) => {this.passwordInput = TextField}}
-                  onChange={this.handleOnChange}
+                  ref={TextField => {
+                    this.passwordInput = TextField;
+                  }}
+                  value={this.state.password}
+                  onChange={this.handlePasswordChange}
                   placeholder="Password"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='password'
+                  type="password"
                 />
               </MuiThemeProvider>
             </div>
@@ -174,9 +157,13 @@ class MediaCard extends Component {
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={this.handleOnClick}         >
+            onClick={this.handleOnClick}
+          >
             Sign In
           </Button>
+
+
+
           <Button
             variant="contained"
             color="secondary"
@@ -184,61 +171,10 @@ class MediaCard extends Component {
           >
             Sign Up
           </Button>
+
+
         </Card>
-        {/* {this.state.data.map(item => {
-          return (
-            <div>
-              <List className={classes.list} container justify="center"> 
-                <ListItem alignItems="flex-center">
-                  <ListItemAvatar>
-                    <Grid alignItems="center">
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="\material-ui\img\idea.jpg"
-                        className={classes.avatar}
-                      />
-                    </Grid>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={item.name}
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          component="span"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {item.title}
-                        </Typography>
-                        <br />
-                        {item.description}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={this.handleOnClick}
-                  size="small"
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  size="small"
-                  onClick={this.handleOnDelete}
-                >
-                  Delete
-                </Button>
-              </List>
-            </div>
-          );
-        })}*/}
-      </div> 
+      </div>
     );
   }
 }

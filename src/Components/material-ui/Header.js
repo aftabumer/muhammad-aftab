@@ -11,12 +11,15 @@ import ParkIdea from "./ParkIdea";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
+import { withRouter } from 'react-router-dom';
+
 const styles = {
   root: {
     flexGrow: 1,
   },
   grow: {
     flexGrow: 1,
+    cursor: 'pointer'
   },
   menuButton: {
     marginLeft: -12,
@@ -25,26 +28,21 @@ const styles = {
 };
 
 class ButtonAppBar extends Component {
-
-  handleOnClick = () => {
-    return (
-      this.props.authenticated
-      ? <button>Login</button>
-      :null
-    )
-    }
   
+    goto = path => {
+      this.props.history.push(path);
+    };
+
   render() {
   const { classes } = this.props;
-  console.log(this.handleOnClick)
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h5" color="inherit" className={classes.grow}>
+          <Typography variant="h5" color="inherit" className={classes.grow}  onClick={() => this.goto("/")}>
             Park Ideas
           </Typography>
-          <Button color="inherit" onClick={this.handleOnClick}>Login</Button>
+          <Button color="inherit" onClick={() => this.goto("/SignIn")}>Login</Button>
         </Toolbar>
       </AppBar>
     </div>
@@ -56,4 +54,7 @@ ButtonAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ButtonAppBar);
+// export default (withStyles(styles)(ButtonAppBar));
+
+
+export default (withRouter(withStyles(styles)(ButtonAppBar)));

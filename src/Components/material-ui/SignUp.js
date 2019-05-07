@@ -32,7 +32,6 @@ const styles = theme => ({
 
   button: {
     margin: theme.spacing.unit
-    
   },
   input: {
     display: "none"
@@ -46,9 +45,9 @@ const styles = theme => ({
     // backgroundColor: 'pink'
   },
   list: {
-    maxWidth: 'auto',
+    maxWidth: "auto",
     // backgroundColor: theme.palette.background.paper
-    backgroundColor: "pink",
+    backgroundColor: "pink"
   },
   margin: {
     margin: theme.spacing.unit
@@ -64,8 +63,8 @@ const styles = theme => ({
     margin: 10
   },
   textField: {
-    flexBasis: 200,
-  },
+    flexBasis: 200
+  }
 });
 const theme = createMuiTheme({
   palette: {
@@ -83,91 +82,89 @@ class MediaCard extends Component {
     data: []
   };
 
-
   handleF_nameChange = event => {
     this.setState({
       f_name: event.target.value
-    })
-  }
+    });
+  };
   handleL_nameChange = event => {
     this.setState({
       l_name: event.target.value
-    })
-  }
+    });
+  };
   handleEmailChange = event => {
     this.setState({
       email: event.target.value
-    })
-  }
+    });
+  };
   handlePasswordChange = event => {
     this.setState({
       password: event.target.value
-    })
-  }
+    });
+  };
   handleC_passwordChange = event => {
     this.setState({
       c_password: event.target.value
-    })
-  }
-
-
-  handleOnClick = () => {
-
-    
-
-    let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
-    let obj = { f_name, l_name, email, password, c_password };
-    data.push(obj);
-    
-    this.setState({
-      data
     });
- 
-   var url = 'http://localhost:8000/signup'
-               
-      console.log(obj)
-                       debugger
-                        fetch(url, {
-                                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                                headers: {
-                                        "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(obj), // body data type must match "Content-Type" header
-                                
-                        }).then((response) => {
-                          debugger
-                                return response.json()
-                        }).then((response) => {
-                                if (response.status == 200) {
-                                        console.log('record has been insert succuss', response.data)
-                                        alert("you have successfuly signed up");
-                                     //   window.location.href="/index.html";
-                                     
-                                }
-                                else { // when error
-                                        console.log('record is not inserted Error: ', response.error)
-                                        
-                                        
-                                        if(response.error.code=="ER_DUP_ENTRY")
-                                        {
-                                                alert("This email id is alredy resgisterd");
-                                        }
-
-                                        
-                                }
-                                // alert('Record has been insert successfully')
-                        }).catch((err) => {
-                                console.log('Error occured in insertion', err)
-                                // alert('Error in insertion')
-                        }) // parses response to JSON
-                
-
-
-    
   };
 
+  handleOnClick = () => {
+    let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
+    let obj = { f_name, l_name, email, password, c_password };
 
+    if (
+      f_name !== "" &&
+      l_name !== "" &&
+      email !== "" &&
+      password !== "" &&
+      c_password !== ""
+    ) {
+      data.push(obj);
+      this.setState({
+        data,
+        f_name: "",
+        l_name: "",
+        email: "",
+        password: "",
+        c_password: ""
+      });
+    } else {
+      alert("plz fill the field");
+    }
 
+    var url = "http://localhost:8000/signup";
+
+    console.log(obj);
+    fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(obj) // body data type must match "Content-Type" header
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        if (response.status == 200) {
+          console.log("record has been insert succuss", response.data);
+          alert("you have successfuly signed up");
+          //   window.location.href="/index.html";
+        } else {
+          // when error
+          console.log("record is not inserted Error: ", response.error);
+
+          if (response.error.code == "ER_DUP_ENTRY") {
+            alert("This email id is alredy resgisterd");
+          }
+        }
+        // alert('Record has been insert successfully')
+      })
+      .catch(err => {
+        console.log("Error occured in insertion", err);
+        // alert('Error in insertion')
+      }); // parses response to JSON
+  };
 
   render() {
     const { classes } = this.props;
@@ -180,8 +177,7 @@ class MediaCard extends Component {
           <CardContent>
             {/* <Form /> */}
             <div className={classes.root}>
-
-            <MuiThemeProvider theme={theme}>
+              <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
                   label="First Name"
@@ -192,9 +188,10 @@ class MediaCard extends Component {
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='First Name'
+                  type="First Name"
                 />
-              </MuiThemeProvider> <MuiThemeProvider theme={theme}>
+              </MuiThemeProvider>{" "}
+              <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
                   label="Last Name"
@@ -205,10 +202,9 @@ class MediaCard extends Component {
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='Last Name'
+                  type="Last Name"
                 />
               </MuiThemeProvider>
-
               <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
@@ -220,10 +216,9 @@ class MediaCard extends Component {
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='email'
+                  type="email"
                 />
               </MuiThemeProvider>
-
               <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
@@ -235,10 +230,9 @@ class MediaCard extends Component {
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='password'
+                  type="password"
                 />
               </MuiThemeProvider>
-
               <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
@@ -250,7 +244,7 @@ class MediaCard extends Component {
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
-                  type='password'
+                  type="password"
                 />
               </MuiThemeProvider>
             </div>
@@ -259,13 +253,13 @@ class MediaCard extends Component {
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={this.handleOnClick}         >
+            onClick={this.handleOnClick}
+          >
             Sign Up
           </Button>
-        
         </Card>
-     }
-      </div> 
+        }
+      </div>
     );
   }
 }
