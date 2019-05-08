@@ -10,6 +10,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import purple from "@material-ui/core/colors/purple";
+import { withRouter } from 'react-router-dom';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -106,6 +107,10 @@ class MediaCard extends Component {
     this.setState({
       c_password: event.target.value
     });
+  };
+
+  goto = path => {
+    this.props.history.push(path);
   };
 
   handleOnClick = () => {
@@ -252,8 +257,8 @@ class MediaCard extends Component {
           <Button
             variant="contained"
             color="primary"
-            className={classes.button}
-            onClick={this.handleOnClick}
+            className={classes.button} 
+            onClick={() => this.goto("/SignIn")}
           >
             Sign Up
           </Button>
@@ -268,4 +273,4 @@ MediaCard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(MediaCard);
+export default (withRouter(withStyles(styles)(MediaCard)));

@@ -17,6 +17,8 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import { withRouter } from 'react-router-dom';
+
 // import purple from '@material-ui/core/colors/purple';
 // import Form from "./Form";
 
@@ -139,6 +141,10 @@ class MediaCard extends Component {
     this.setState({ data });
   };
 
+  goto = path => {
+    this.props.history.push(path);
+  };
+
   render() {
     const { classes } = this.props;
     console.log(this.state.data);
@@ -204,11 +210,13 @@ class MediaCard extends Component {
             onClick={this.handleOnClick}
           >
             Post
+            
           </Button>
           <Button
             variant="contained"
             color="secondary"
             className={classes.button}
+            onClick={() => this.goto("/")}
           >
             Cancle
           </Button>
@@ -309,4 +317,5 @@ MediaCard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(MediaCard);
+export default (withRouter(withStyles(styles)(MediaCard)));
+
