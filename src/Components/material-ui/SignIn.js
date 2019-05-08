@@ -10,7 +10,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import purple from "@material-ui/core/colors/purple";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -88,14 +88,34 @@ class MediaCard extends Component {
     });
   };
 
-  handleOnClick = () => {
+  // handleOnClick = () => {
+  //   let { email, password, data } = this.state; //object destructing
+  //   let obj = { email, password };
+
+  //   if (email !== "" && password !== "") {
+  //     data.push(obj);
+  //     this.setState({
+
+  //       data,
+  //       email: "",
+  //       password: ""
+  //     });
+  //   } else {
+  //     alert("plz fill the field");
+  //   }
+  // };
+
+  goto = path => {
+    this.props.history.push(path);
+  };
+
+  handleOnClick = e => {
     let { email, password, data } = this.state; //object destructing
     let obj = { email, password };
 
     if (email !== "" && password !== "") {
       data.push(obj);
       this.setState({
-        
         data,
         email: "",
         password: ""
@@ -103,15 +123,56 @@ class MediaCard extends Component {
     } else {
       alert("plz fill the field");
     }
-  };
 
-  goto = path => {
-    this.props.history.push(path);
+    var url = "http://localhost:8000/signin";
+    fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(obj) // body data type must match "Content-Type" header
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        if (response.status == 200) {
+          console.log("login successful", response.data);
+          const { user_id } = response.data;
+          console.log(user_id);
+          window.localStorage.setItem("user_id", user_id);
+
+          const { f_name } = response.data;
+          console.log(f_name);
+          localStorage.setItem("f_name", f_name);
+
+          alert("login successfull");
+          this.goto('/SignIn')
+          //	window.location.href="/v_dashboard.html";
+        } else if (response.status == 204) {
+          console.log("Email and password does not match", response.data);
+          alert("incorrect email or password");
+        } else {
+          // when error
+          console.log("login fail: ", response.error);
+          alert(response.error.code);
+        }
+        // alert('Record has been insert successfully')
+      })
+      .catch(err => {
+        console.log("Error occured", err);
+        alert(err);
+      }); // parses response to JSON
+
+    e.preventDefault();
+    this.setState({
+      email: "",
+      password: ""
+    });
   };
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.data);
 
     return (
       <div>
@@ -119,7 +180,6 @@ class MediaCard extends Component {
           <h2>Sign In</h2>
 
           <CardContent>
-            
             <div className={classes.root}>
               <MuiThemeProvider theme={theme}>
                 <TextField
@@ -159,16 +219,15 @@ class MediaCard extends Component {
             </div>
           </CardContent>
           <Button
+            type="reset"
             variant="contained"
             color="primary"
             className={classes.button}
             onChange={() => this.goto("/ParkIdea")}
-            onClick={this.handleOnClick }
+            onClick={this.handleOnClick}
           >
             Sign In
           </Button>
-
-
 
           <Button
             variant="contained"
@@ -178,8 +237,6 @@ class MediaCard extends Component {
           >
             Sign Up
           </Button>
-
-
         </Card>
       </div>
     );
@@ -190,4 +247,4 @@ MediaCard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default (withRouter(withStyles(styles)(MediaCard)));
+export default withRouter(withStyles(styles)(MediaCard));

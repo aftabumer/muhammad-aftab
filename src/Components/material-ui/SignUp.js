@@ -88,21 +88,25 @@ class MediaCard extends Component {
       f_name: event.target.value
     });
   };
+
   handleL_nameChange = event => {
     this.setState({
       l_name: event.target.value
     });
   };
+
   handleEmailChange = event => {
     this.setState({
       email: event.target.value
     });
   };
+
   handlePasswordChange = event => {
     this.setState({
       password: event.target.value
     });
   };
+
   handleC_passwordChange = event => {
     this.setState({
       c_password: event.target.value
@@ -113,32 +117,17 @@ class MediaCard extends Component {
     this.props.history.push(path);
   };
 
-  handleOnClick = () => {
-    let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
-    let obj = { f_name, l_name, email, password, c_password };
+  handleOnClick = (e) => {
+    let { f_name, l_name, email, password,c_password,data } = this.state; //object destructing
+    let obj = { f_name, l_name, email, password,c_password};
+    data.push(obj);
+    this.setState({ data });
 
-    if (
-      f_name !== "" &&
-      l_name !== "" &&
-      email !== "" &&
-      password !== "" &&
-      c_password !== ""
-    ) {
-      data.push(obj);
-      this.setState({
-        data,
-        f_name: "",
-        l_name: "",
-        email: "",
-        password: "",
-        c_password: ""
-      });
-    } else {
-      alert("plz fill the field");
+    if(this.state.password != this.state.c_password){
+      alert("Passwords don't match");
     }
-
-    var url = "http://localhost:8000/signup";
-
+    else{
+    var url = 'http://localhost:8000/signup'
     console.log(obj);
     fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -169,7 +158,9 @@ class MediaCard extends Component {
         console.log("Error occured in insertion", err);
         // alert('Error in insertion')
       }); // parses response to JSON
-  };
+      
+  }
+  }
 
   render() {
     const { classes } = this.props;
@@ -268,6 +259,7 @@ class MediaCard extends Component {
     );
   }
 }
+
 
 MediaCard.propTypes = {
   classes: PropTypes.object.isRequired
