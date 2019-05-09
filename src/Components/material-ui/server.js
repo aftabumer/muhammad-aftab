@@ -86,4 +86,32 @@ app.post('/parkIdea', (req, res) => {
     });
 })
 
+app.post('/getIdea', (req, res) => {
+    
+
+    //  var sql = 'SELECT * FROM customers WHERE address = ' + mysql.escape(adr);
+    var sql = 'SELECT * FROM  idea';
+    //  var sql ='SELECT * FROM signup WHERE email_id = ? and password= ?';
+
+    connection.query(sql,(err, result) => {
+        if (err) {
+            console.log('Errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
+            res.status(500).send(JSON.stringify({ error: err, status: 500 }))
+        }
+        else {
+            if (result.length > 0) {
+                console.log("idea fetch success");
+                res.status(200).send({ data: result, status: 200 })
+                //console.log(result)
+            }
+            else {
+                console.log("unable to fetch ideas");
+                res.status(500).send({ error: 'unable to fetch ideas', status: 204 })
+                //res.status(204).send({ data: req.body, status: 204 })
+            }
+        }
+
+    });
+})
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

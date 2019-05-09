@@ -3,6 +3,7 @@ import ParkIdea from "./Components/material-ui/ParkIdea";
 import SignIn from "./Components/material-ui/SignIn";
 import SignUp from "./Components/material-ui/SignUp";
 import Header from "./Components/material-ui/Header";
+import Idea from "./Components/material-ui/Idea"
 
 // using ES6 modules
 import { BrowserRouter, Route } from "react-router-dom";
@@ -33,6 +34,7 @@ class App extends Component {
       <Route exact path='/SignIn' component={SignIn} />
       <Route exact path='/SignUp' component={SignUp} />
       <Route exact path='/ParkIdea' component={ParkIdea} />
+      <Route exact path='/Idea' component={Idea} />
 
         {/* <SignIn />
         <SignUp /> */}    
