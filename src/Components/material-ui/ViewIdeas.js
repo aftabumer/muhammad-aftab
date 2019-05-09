@@ -19,6 +19,15 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { withRouter } from 'react-router-dom';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+
+
 // import purple from '@material-ui/core/colors/purple';
 // import Form from "./Form";
 
@@ -73,20 +82,16 @@ const theme = createMuiTheme({
 
 class MediaCard extends Component {
   constructor(props) {
-    super(props)
-   var user_id= window.localStorage.getItem('user_id')
-   var user_name=window.localStorage.getItem('f_name')
+    super(props);
 
     this.state = {
-      name: user_name,
+      name: "",
       title: "",
       description: "",
       data: [],
       e_name: "",
       e_title: "",
-      e_description: "",
-      user_id: user_id,
-      data: []
+      e_description: ""
     };
   }
 
@@ -97,57 +102,20 @@ class MediaCard extends Component {
   };
 
   handleOnClick = () => {
-   
- 
-    
-    let { user_id, name, title, description, data } = this.state; //object destructing
-    let obj = { user_id, name, title, description, editStatus: false}
-    data.push(obj);
-  
-    var url = 'http://localhost:8000/parkIdea'
-               
-      console.log(obj)
-                       
-                        fetch(url, {
-                                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                                headers: {
-                                        "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(obj), // body data type must match "Content-Type" header
-                                
-                        }).then((response) => {
-                          
-                                return response.json()
-                        }).then((response) => {
-                                if (response.status == 200) {
-                                        console.log('record has been insert succuss', response.data)
-                                        alert("you have successfuly parked your idea");
-                                     //   window.location.href="/index.html";
-                                     
-                                }
-                                else { // when error
-                                        console.log('record is not inserted Error: ', response.error)
-                                        
-                                        alert("your idea is not parked successfuly");
-                                        if(response.error.code=="ER_DUP_ENTRY")
-                                        {
-                                                alert("This email id is alredy resgisterd");
-                                        }
+    let { name, title, description, data } = this.state; //object destructing
+    let obj = { name, title, description, editStatus: false };
 
-                                        
-                                }
-                                // alert('Record has been insert successfully')
-                        }).catch((err) => {
-                                console.log('Error occured in insertion', err)
-                                // alert('Error in insertion')
-                        }) // parses response to JSON
-
-    this.setState({
-      data,
-      name:'',
-      title:'',
-      description:'',
-    });
+    if (name !== "" && title !== "" && description !== "") {
+      data.push(obj);
+      this.setState({
+        data,
+        name: "",
+        title: "",
+        description: ""
+      });
+    } else {
+      alert("plz fill the field");
+    }
   };
 
   handleOnDelete = index => {
@@ -193,77 +161,12 @@ class MediaCard extends Component {
     return (
       <div>
         <Card className={classes.card}>
-          <h2>Idea Details</h2>
+          <h2>View Ideas</h2>
 
           <CardContent>
             {/* <Form /> */}
             <div className={classes.root}>
-              <MuiThemeProvider theme={theme}>
-                <TextField
-                  className={classes.margin}
-                  label="Name"
-                  name="name"
-                  value={this.state.name}
-                  onChange={this.handleOnChange}
-                  placeholder="Name"
-                  variant="outlined"
-                  id="filled-read-only-input"
-                  fullWidth
-                  InputProps={{
-                    readOnly: true,
-                    }}
-                />
-              </MuiThemeProvider>
-
-              <MuiThemeProvider theme={theme}>
-                <TextField
-                  className={classes.margin}
-                  label="Title"
-                  name="title"
-                  value={this.state.title}
-                  onChange={this.handleOnChange}
-                  placeholder="Title"
-                  variant="outlined"
-                  id="mui-theme-provider-outlined-input"
-                  fullWidth
-                />
-              </MuiThemeProvider>
-
-              <MuiThemeProvider theme={theme}>
-                <TextField
-                  id="outlined-multiline-flexible"
-                  label="Description"
-                  name="description"
-                  value={this.state.description}
-                  onChange={this.handleOnChange}
-                  placeholder="Description"
-                  multiline
-                  rows="4"
-                  fullWidth
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                />
-              </MuiThemeProvider>
-            </div>
-          </CardContent>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.handleOnClick}
-          >
-            Post
-            
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.button}
-            onClick={() => this.goto("/")}
-          >
-            Cancle
-          </Button>
+             
         </Card>
         {this.state.data.map((item, i) => {
           return (
@@ -327,7 +230,6 @@ class MediaCard extends Component {
                   />
                 </ListItem>
                 <Button
-                
                   variant="contained"
                   color="primary"
                   className={classes.button}
@@ -362,6 +264,5 @@ MediaCard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(MediaCard);
-//export default (withRouter(withStyles(styles)(MediaCard)));
+export default (withRouter(withStyles(styles)(MediaCard)));
 

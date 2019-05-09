@@ -5,11 +5,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import  Modal from "./Modal";
+
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ParkIdea from "./ParkIdea";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
+
+import { withRouter } from 'react-router-dom';
 
 const styles = {
   root: {
@@ -17,6 +21,7 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
+    cursor: 'pointer'
   },
   menuButton: {
     marginLeft: -12,
@@ -24,27 +29,53 @@ const styles = {
   },
 };
 
-class ButtonAppBar extends Component {
 
-  handleOnClick = () => {
-    return (
-      this.props.authenticated
-      ? <button>Login</button>
-      :null
-    )
-    }
+var isSignIn= window.localStorage.getItem("isSignIn")
+console.log(isSignIn)
+
+class ButtonAppBar extends Component {
   
+  
+    goto = path => {
+    
+      this.props.history.push(path);
+    };
+
+    state = {
+      status: isSignIn,
+      showStatus: "login"
+    };
+
+    handleOnClick = () => {
+
+      //var showStatus
+
+      if(this.status==false){
+       
+        this.setState.showStatus="Login"
+
+         this.goto("/SignIn")
+      }
+      else{
+
+       this.setState.showStatus="Signout"
+      
+      }
+
+    };
+    
+
   render() {
+   
   const { classes } = this.props;
-  console.log(this.handleOnClick)
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h5" color="inherit" className={classes.grow}>
+          <Typography variant="h5" color="inherit" className={classes.grow}  onClick={() => this.goto("/")}>
             Park Ideas
-          </Typography>
-          <Button color="inherit" onClick={this.handleOnClick}>Login</Button>
+          </Typography> 
+          <Button color="inherit" onClick={this.handleOnClick}>hi {this.showStatus}</Button>  
         </Toolbar>
       </AppBar>
     </div>
@@ -56,4 +87,6 @@ ButtonAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ButtonAppBar);
+
+
+export default (withRouter(withStyles(styles)(ButtonAppBar)));

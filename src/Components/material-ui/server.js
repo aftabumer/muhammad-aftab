@@ -27,7 +27,7 @@ connection.connect(function (err) {
 //app.get('/', (req, res) => res.send('Hello World!'))
 
 app.post('/signup', (req, res) => {
-    let { f_name, l_name, email, password,} = req.body
+    let { f_name, l_name, email, password, } = req.body
 
     var sql = `INSERT INTO signup (f_name, l_name, email,password) VALUES ('${f_name}', '${l_name}','${email}','${password}')`;
     connection.query(sql, (err, result) => {
@@ -72,7 +72,7 @@ app.post('/signin', (req, res) => {
 
 
 app.post('/parkIdea', (req, res) => {
-    let { user_id, name, title, description,} = req.body
+    let { user_id, name, title, description, } = req.body
 
     var sql = `INSERT INTO idea (user_id, user_name, idea_title, description) VALUES ('${user_id}', '${name}','${title}','${description}')`;
     connection.query(sql, (err, result) => {
@@ -87,13 +87,13 @@ app.post('/parkIdea', (req, res) => {
 })
 
 app.post('/getIdea', (req, res) => {
-    
+
 
     //  var sql = 'SELECT * FROM customers WHERE address = ' + mysql.escape(adr);
     var sql = 'SELECT * FROM  idea';
     //  var sql ='SELECT * FROM signup WHERE email_id = ? and password= ?';
 
-    connection.query(sql,(err, result) => {
+    connection.query(sql, (err, result) => {
         if (err) {
             console.log('Errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
             res.status(500).send(JSON.stringify({ error: err, status: 500 }))
