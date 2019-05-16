@@ -46,7 +46,6 @@ class ButtonAppBar extends Component {
       });
     
     }, 1000)
-
   }
 
 
@@ -57,8 +56,9 @@ class ButtonAppBar extends Component {
   };
 
   handleOnLogin = () => {
+
     //var showStatus
-   
+
     this.goto("/SignIn")
 
   };
@@ -69,7 +69,8 @@ class ButtonAppBar extends Component {
   }
 
   handleOnPostIdea = () => {
-    this.goto("/ParkIdea")
+    
+    //this.goto("/ParkIdea")
   }
 
   render() {
@@ -85,8 +86,8 @@ class ButtonAppBar extends Component {
               Park Ideas
           </Typography>
           {
-                !this.state.isSignIn ?
-                <Button color="inherit" onClick={this.handleOnLogin}>Login</Button>
+                this.state.isSignIn ?
+                <Button color="inherit" onClick={this.handleOnlogin}>Login</Button>
                 :
                 <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
                 

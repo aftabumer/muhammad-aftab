@@ -95,6 +95,7 @@ class MediaCard extends Component {
     ideas: []
   };
 
+
   componentDidMount() {
     this.handleOnClick()
   }
@@ -142,7 +143,6 @@ class MediaCard extends Component {
       }
       // alert('Record has been insert successfully')
     }).catch((err) => {
-      debugger
       console.log('Error occured', err)
       alert(err)
     }) // parses response to JSON

@@ -70,13 +70,14 @@ const theme = createMuiTheme({
   }
 });
 
-var isSignIn = false
+
 
 
 class MediaCard extends Component {
   state = {
     email: "",
     password: "",
+    isSignIn : false,
     data: []
   };
 
@@ -157,9 +158,12 @@ class MediaCard extends Component {
           localStorage.setItem("f_name", f_name);
 
 
-          isSignIn= true
+//          this.setState.isSignIn= true
+          this.setState({
+          isSignIn: true
+          });
           
-          window.localStorage.setItem("isSignIn",isSignIn)
+          window.localStorage.setItem("isSignIn",this.state.isSignIn)
           
 
           alert("login successfull");
