@@ -121,7 +121,7 @@ class MediaCard extends Component {
 
       if (response.status == 200) {
         console.log('data fethed', response.data);
-        debugger
+       
         this.setState({ ideas: response.data })
 
 

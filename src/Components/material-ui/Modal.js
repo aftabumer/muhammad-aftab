@@ -63,6 +63,7 @@ class SimpleModal extends React.Component {
           open={this.state.open}
           // onClose={this.handleClose}
         >
+       
           <div style={getModalStyle()} className={classes.paper}>
             {/* <SimpleModalWrapped /> */}
               <Button

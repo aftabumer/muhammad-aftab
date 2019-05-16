@@ -29,7 +29,7 @@ const styles = {
   },
 };
 
-
+var userName = window.localStorage.getItem("f_name")
 
 
 class ButtonAppBar extends Component {
@@ -37,12 +37,14 @@ class ButtonAppBar extends Component {
   state = {
     isSignIn: false
   }
-
+  
   componentWillMount() {
     setInterval(() => {
       var isSignIn = JSON.parse(window.localStorage.getItem("isSignIn"))
+      
       this.setState({
-        isSignIn
+        isSignIn,
+        userName: userName
       });
     
     }, 1000)
@@ -64,13 +66,20 @@ class ButtonAppBar extends Component {
   };
 
   handleOnlogout = () => {
+    localStorage.clear()
     localStorage.setItem("isSignIn", false)
+    
     this.goto("/Idea")
   }
 
   handleOnPostIdea = () => {
     this.goto("/ParkIdea")
   }
+
+  handleOnMyIdeas =()=>{
+    this.goto("/MyIdeas")
+  }
+ 
 
   render() {
 
@@ -88,7 +97,13 @@ class ButtonAppBar extends Component {
                 !this.state.isSignIn ?
                 <Button color="inherit" onClick={this.handleOnLogin}>Login</Button>
                 :
-                <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
+                <div>
+                 <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
+                 <Button color="inherit" onClick={this.handleOnPostIdea}>Park Idea</Button>
+                 <Button color="inherit" onClick={this.handleOnMyIdeas}>My Ideas</Button>
+                 <p color="inherit">welcome {this.state.userName}</p>
+                </div>
+                
                 
           } 
           </Toolbar>
