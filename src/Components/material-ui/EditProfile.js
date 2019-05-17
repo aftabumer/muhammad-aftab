@@ -18,7 +18,8 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { userInfo } from "os";
 // import purple from '@material-ui/core/colors/purple';
 // import Form from "./Form";
 
@@ -81,6 +82,7 @@ class MediaCard extends Component {
     email: "",
     password: "",
     c_password: "",
+    user_info: [],
     data: []
   };
 
@@ -121,21 +123,79 @@ class MediaCard extends Component {
     this.props.history.push(path);
   };
 
+
+  componentDidMount() {
+    this.sendIdToServer()
+  }
+
+  
+  sendIdToServer = () => {
+
+    
+    var user_id = window.localStorage.getItem('user_id')
+
+    let {f_name, l_name, email, password, c_password, data } = this.state;
+
+    let obj = {
+      user_id: user_id
+    }
+    data.push(obj);
+    
+    
+     
+    var url = 'http://localhost:8000/getProfile'
+    console.log(obj);
+    fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(obj) // body data type must match "Content-Type" header
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        if (response.status == 200) {
+          console.log("info fetched", response.data);
+          
+          this.setState({ user_info: response.data})
+
+         debugger
+          //   window.location.href="/index.html";
+        } else {
+          // when error
+          console.log("failed to fecth info: ", response.error);
+        }
+        // alert('Record has been insert successfully')
+      })
+      .catch(err => {
+        console.log("Error occured in insertion", err);
+        // alert('Error in insertion')
+      }); // parses response to JSON
+
+
+  }
+
+
   handleOnClick = (e) => {
-    let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
-    let obj = { f_name, l_name, email, password, c_password };
+
+    var user_id = window.localStorage.getItem('user_id')
+
+    let {f_name, l_name, email, password, c_password, data } = this.state; //object destructing
+    let obj = { user_id,f_name, l_name, email, password, c_password };
     data.push(obj);
     this.setState({ data });
 
     if (f_name == "" || l_name == "" || email == "" || password == "" || c_password == "") {
       alert("please fill all the fields");
 
-   
+
     }
     else if (this.state.password != this.state.c_password) {
       alert("Passwords don't match");
     }
-    
+
     else {
 
       data.push(obj);
@@ -145,7 +205,7 @@ class MediaCard extends Component {
         password: ""
       });
 
-      var url = 'http://localhost:8000/signup'
+      var url = 'http://localhost:8000/updateProfile'
       console.log(obj);
       fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -160,12 +220,12 @@ class MediaCard extends Component {
         .then(response => {
           if (response.status == 200) {
             console.log("record has been insert succuss", response.data);
-            alert("you have successfuly signed up");
+            alert("you have successfuly eidted your profile");
             this.goto('/SignIn')
             //   window.location.href="/index.html";
           } else {
             // when error
-            console.log("record is not inserted Error: ", response.error);
+            console.log("faile to update profile: ", response.error);
 
             if (response.error.code == "ER_DUP_ENTRY") {
               alert("This email id is alredy resgisterd");
@@ -187,7 +247,7 @@ class MediaCard extends Component {
     return (
       <div>
         <Card className={classes.card}>
-          <h2>Sign Up</h2>
+          <h2>Edit Profile</h2>
 
           <CardContent>
             {/* <Form /> */}
@@ -195,7 +255,7 @@ class MediaCard extends Component {
               <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
-                  label="First Name"
+                  label=""
                   name="name"
                   value={this.state.f_name}
                   onChange={this.handleF_nameChange}
@@ -209,9 +269,9 @@ class MediaCard extends Component {
               <MuiThemeProvider theme={theme}>
                 <TextField
                   className={classes.margin}
-                  label="Last Name"
+                  label=""
                   name="name"
-                  value={this.state.l_name}
+                  value={this.state.user_info.l_name}
                   onChange={this.handleL_nameChange}
                   placeholder="Last Name"
                   variant="outlined"
@@ -220,23 +280,22 @@ class MediaCard extends Component {
                   type="Last Name"
                 />
               </MuiThemeProvider>
-              
+
               <MuiThemeProvider theme={theme}>
-              
+
                 <TextField
                   className={classes.margin}
-                  label="Email"
+                  label=""
                   name="name"
-                  value={this.state.email}
+                  value={this.state.user_info.email}
                   onChange={this.handleEmailChange}
                   placeholder="Email"
                   variant="outlined"
                   id="mui-theme-provider-outlined-input"
                   fullWidth
                   type="email"
-                  validators={['required', 'isEmail']}
                 />
-              
+
               </MuiThemeProvider>
               <MuiThemeProvider theme={theme}>
                 <TextField
@@ -274,7 +333,7 @@ class MediaCard extends Component {
             className={classes.button}
             onClick={this.handleOnClick}
           >
-            Sign Up
+            Done
           </Button>
         </Card>
         }

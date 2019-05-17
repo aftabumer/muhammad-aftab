@@ -74,8 +74,8 @@ const theme = createMuiTheme({
 class MediaCard extends Component {
   constructor(props) {
     super(props)
-   var user_id= window.localStorage.getItem('user_id')
-   var user_name=window.localStorage.getItem('f_name')
+    var user_id = window.localStorage.getItem('user_id')
+    var user_name = window.localStorage.getItem('f_name')
 
     this.state = {
       name: user_name,
@@ -96,61 +96,75 @@ class MediaCard extends Component {
     });
   };
 
-  handleOnClick = () => {
-   
- 
-    
+  handleOnClick = (e) => {
+
+
+
     let { user_id, name, title, description, data } = this.state; //object destructing
-    let obj = { user_id, name, title, description, editStatus: false}
+    let obj = { user_id, name, title, description, editStatus: false }
     data.push(obj);
-  
-    var url = 'http://localhost:8000/parkIdea'
-               
+
+    if (name == "" || title == "" || description == "") {
+      alert("please fill all the fields");
+    }
+
+    else {
+      data.push(obj);
+
+      this.setState({
+        data,
+        name: "",
+        title: "",
+        description: ""
+      });
+
+      var url = 'http://localhost:8000/parkIdea'
+
       console.log(obj)
-                       
-                        fetch(url, {
-                                method: "POST", // *GET, POST, PUT, DELETE, etc.
-                                headers: {
-                                        "Content-Type": "application/json"
-                                },
-                                body: JSON.stringify(obj), // body data type must match "Content-Type" header
-                                
-                        }).then((response) => {
-                          
-                                return response.json()
-                        }).then((response) => {
-                                if (response.status == 200) {
-                                        console.log('record has been insert succuss', response.data)
-                                        alert("you have successfuly parked your idea");
-                                     //   window.location.href="/index.html";
-                                     
-                                }
-                                else { // when error
-                                        console.log('record is not inserted Error: ', response.error)
-                                        
-                                        alert("your idea is not parked successfuly");
-                                        if(response.error.code=="ER_DUP_ENTRY")
-                                        {
-                                                alert("This email id is alredy resgisterd");
-                                        }
 
-                                        
-                                }
-                                // alert('Record has been insert successfully')
-                        }).catch((err) => {
-                                console.log('Error occured in insertion', err)
-                                // alert('Error in insertion')
-                        }) // parses response to JSON
+      fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(obj), // body data type must match "Content-Type" header
 
-    this.setState({
-      data,
-      name:'',
-      title:'',
-      description:'',
-    });
-  };
+      }).then((response) => {
 
-  handleOnDelete = index => {
+        return response.json()
+      }).then((response) => {
+        if (response.status == 200) {
+          console.log('record has been insert succuss', response.data)
+          alert("you have successfuly parked your idea");
+          //   window.location.href="/index.html";
+          this.goto("/Idea")
+        }
+        else { // when error
+          console.log('record is not inserted Error: ', response.error)
+
+          alert("your idea is not parked successfuly");
+          if (response.error.code == "ER_DUP_ENTRY") {
+            alert("This email id is alredy resgisterd");
+          }
+
+
+        }
+        // alert('Record has been insert successfully')
+      }).catch((err) => {
+        console.log('Error occured in insertion', err)
+        // alert('Error in insertion')
+      }) // parses response to JSON  
+
+      e.preventDefault();
+      this.setState({
+        name: "",
+        tile: "",
+        description
+      });
+    };
+  }
+
+  /*handleOnDelete = index => {
     let data = this.state.data;
     data.splice(index, 1);
     this.setState({
@@ -181,7 +195,7 @@ class MediaCard extends Component {
 
     this.setState({ data });
   };
-
+*/
   goto = path => {
     this.props.history.push(path);
   };
@@ -211,7 +225,7 @@ class MediaCard extends Component {
                   fullWidth
                   InputProps={{
                     readOnly: true,
-                    }}
+                  }}
                 />
               </MuiThemeProvider>
 
@@ -254,7 +268,7 @@ class MediaCard extends Component {
             onClick={this.handleOnClick}
           >
             Post
-            
+
           </Button>
           <Button
             variant="contained"
@@ -265,94 +279,6 @@ class MediaCard extends Component {
             Cancle
           </Button>
         </Card>
-        {this.state.data.map((item, i) => {
-          return (
-            <div>
-              {/* <p>{item.name}</p>
-              <p>{item.title}</p>
-              <p>{item.description}</p> */}
-
-              <List className={classes.list} container justify="center">
-                <ListItem alignItems="flex-center">
-                  <ListItemAvatar>
-                    <Grid alignItems="center">
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="\material-ui\img\idea.jpg"
-                        className={classes.avatar}
-                      />
-                    </Grid>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      item.editStatus ? (
-                        <input
-                          name="e_name"
-                          value={this.state.e_name}
-                          onChange={this.handleOnChange}
-                        />
-                      ) : (
-                        item.name
-                      )
-                    }
-                    secondary={
-                      <React.Fragment>
-                        <Typography
-                          component="span"
-                          className={classes.inline}
-                          color="textPrimary"
-                        >
-                          {item.editStatus ? (
-                            <input
-                              name="e_title"
-                              value={this.state.e_title}
-                              onChange={this.handleOnChange}
-                            />
-                          ) : (
-                            item.title
-                          )}
-                        </Typography>
-                        <br />
-                        {item.editStatus ? (
-                          <input
-                            name="e_description"
-                            value={this.state.e_description}
-                            onChange={this.handleOnChange}
-                          />
-                        ) : (
-                          item.description
-                        )}
-                      </React.Fragment>
-                    }
-                  />
-                </ListItem>
-                <Button
-                
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={
-                    item.editStatus
-                      ? () => this.handleSave(i)
-                      : () => this.handleEdit(i)
-                  }
-                  size="small"
-                >
-                  {item.editStatus ? "Save" : "Edit"}
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  size="small"
-                  onClick={this.handleOnDelete}
-                >
-                  Delete
-                </Button>
-              </List>
-            </div>
-          );
-        })}
       </div>
     );
   }

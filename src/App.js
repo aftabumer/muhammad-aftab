@@ -10,6 +10,7 @@ import Idea from "./Components/material-ui/Idea"
 import { BrowserRouter, Route } from "react-router-dom";
 import  Modal from "./Components/material-ui/Modal";
 import MyIdeas from "./Components/material-ui/MyIdeas";
+import EditProfile from "./Components/material-ui/EditProfile"
 // // using CommonJS modules
 // var Router = require("react-router").Router;
 // var Route = require("react-router").Route;
@@ -41,6 +42,9 @@ class App extends Component {
       <Route exact path='/ParkIdea' component={ParkIdea} />
       <Route exact path='/Idea' component={Idea} />
       <Route exact path='/MyIdeas' component={MyIdeas} />
+      <Route exact path='/EditProfile' component={EditProfile} />
+    
+      
 
         {/* <SignIn />
         <SignUp /> */}    

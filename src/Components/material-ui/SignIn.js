@@ -77,7 +77,7 @@ class MediaCard extends Component {
   state = {
     email: "",
     password: "",
-    isSignIn : false,
+    isSignIn: false,
     data: []
   };
 
@@ -115,83 +115,86 @@ class MediaCard extends Component {
     this.props.history.push(path);
   };
 
-  
+
 
   handleOnClick = e => {
 
-    
+
     let { email, password, data } = this.state; //object destructing
     let obj = { email, password };
 
-    if (email !== "" && password !== "") {
+    if (email == "" || password == "") {
+      alert("please fill all the fields");
+    }
+
+    else {
       data.push(obj);
       this.setState({
         data,
         email: "",
         password: ""
       });
-    } else {
-      alert("plz fill the field");
-    }
 
-    var url = "http://localhost:8000/signin";
-    fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(obj) // body data type must match "Content-Type" header
-    })
-      .then(response => {
-        return response.json();
+
+
+      var url = "http://localhost:8000/signin";
+      fetch(url, {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(obj) // body data type must match "Content-Type" header
       })
-      .then(response => {
+        .then(response => {
+          return response.json();
+        })
+        .then(response => {
 
-        if (response.status == 200) {
-          console.log("login successful", response.data);
-          const { user_id } = response.data;
-          console.log(user_id);
-          window.localStorage.setItem("user_id", user_id)
-              
-          const { f_name } = response.data;
-          console.log(f_name);
-          localStorage.setItem("f_name", f_name);
+          if (response.status == 200) {
+            console.log("login successful", response.data);
+            const { user_id } = response.data;
+            console.log(user_id);
+            window.localStorage.setItem("user_id", user_id)
+
+            const { f_name } = response.data;
+            console.log(f_name);
+            localStorage.setItem("f_name", f_name);
 
 
-//          this.setState.isSignIn= true
-          this.setState({
-          isSignIn: true
-          });
-          
-          window.localStorage.setItem("isSignIn",this.state.isSignIn)
-          
+            //          this.setState.isSignIn= true
+            this.setState({
+              isSignIn: true
+            });
 
-          alert("login successfull");
-          this.goto('/Idea')
-          //	window.location.href="/v_dashboard.html";
-        } else if (response.status == 204) {
-          
-          console.log("Email and password does not match", response.data);
-          alert("incorrect email or password");
-        } else {
-          // when error
-          console.log("login fail: ", response.error);
-          alert(response.error.code);
-        }
-        // alert('Record has been insert successfully')
-      })
-      .catch(err => {
-        console.log("Error occured", err);
-        alert(err);
-      }); // parses response to JSON
+            window.localStorage.setItem("isSignIn", this.state.isSignIn)
 
-    e.preventDefault();
-    this.setState({
-      email: "",
-      password: ""
-    });
-  };
 
+            alert("login successfull");
+            this.goto('/Idea')
+            //	window.location.href="/v_dashboard.html";
+          } else if (response.status == 204) {
+
+            console.log("Email and password does not match", response.data);
+            alert("incorrect email or password");
+          } else {
+            // when error
+            console.log("login fail: ", response.error);
+            alert(response.error.code);
+          }
+          // alert('Record has been insert successfully')
+        })
+        .catch(err => {
+          console.log("Error occured", err);
+          alert(err);
+        }); // parses response to JSON
+
+      e.preventDefault();
+      this.setState({
+        email: "",
+        password: ""
+      });
+    };
+  }
   render() {
     const { classes } = this.props;
 

@@ -27,6 +27,7 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+ 
 };
 
 var userName = window.localStorage.getItem("f_name")
@@ -37,18 +38,21 @@ class ButtonAppBar extends Component {
   state = {
     isSignIn: false
   }
-  
+
   componentWillMount() {
+    
     setInterval(() => {
+
       var isSignIn = JSON.parse(window.localStorage.getItem("isSignIn"))
-      
+      var userName = window.localStorage.getItem("f_name")
+
       this.setState({
         isSignIn,
         userName: userName
       });
-    
-    }, 1000)
 
+    }, 1000)
+     
   }
 
 
@@ -60,7 +64,7 @@ class ButtonAppBar extends Component {
 
   handleOnLogin = () => {
     //var showStatus
-   
+
     this.goto("/SignIn")
 
   };
@@ -68,7 +72,7 @@ class ButtonAppBar extends Component {
   handleOnlogout = () => {
     localStorage.clear()
     localStorage.setItem("isSignIn", false)
-    
+
     this.goto("/Idea")
   }
 
@@ -76,16 +80,16 @@ class ButtonAppBar extends Component {
     this.goto("/ParkIdea")
   }
 
-  handleOnMyIdeas =()=>{
+  handleOnMyIdeas = () => {
     this.goto("/MyIdeas")
   }
- 
+
 
   render() {
 
     const { classes } = this.props;
-    
-      
+
+
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -93,26 +97,26 @@ class ButtonAppBar extends Component {
             <Typography variant="h5" color="inherit" className={classes.grow} onClick={() => this.goto("/")}>
               Park Ideas
           </Typography>
-          {
-                !this.state.isSignIn ?
+            {
+              !this.state.isSignIn ?
                 <Button color="inherit" onClick={this.handleOnLogin}>Login</Button>
                 :
                 <div>
-                 <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
-                 <Button color="inherit" onClick={this.handleOnPostIdea}>Park Idea</Button>
-                 <Button color="inherit" onClick={this.handleOnMyIdeas}>My Ideas</Button>
-                 <p color="inherit">welcome {this.state.userName}</p>
+                  <h4 color="inherit"><b>welcome {this.state.userName}</b></h4>
+                  <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
+                  <Button color="inherit" onClick={this.handleOnPostIdea}>Park Idea</Button>
+                  <Button color="inherit" onClick={this.handleOnMyIdeas}>My Ideas</Button>
                 </div>
-                
-                
-          } 
+
+
+            }
           </Toolbar>
         </AppBar>
       </div>
 
     );
-          
-       
+
+
   }
 }
 
