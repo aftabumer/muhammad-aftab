@@ -66,6 +66,7 @@ class SimpleModal extends React.Component {
        
           <div style={getModalStyle()} className={classes.paper}>
             {/* <SimpleModalWrapped /> */}
+            <p style={{textAlign: 'center'}}>You are here to?</p>
               <Button
                 variant="contained"
                 color="primary"

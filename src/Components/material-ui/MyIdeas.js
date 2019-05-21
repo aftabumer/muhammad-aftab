@@ -1,106 +1,204 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
-
-import classNames from 'classnames';
-import Button from '@material-ui/core/Button';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
-import Icon from '@material-ui/core/Icon';
-import SaveIcon from '@material-ui/icons/Save';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import {
+  withStyles,
+  MuiThemeProvider,
+  createMuiTheme
+} from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import purple from "@material-ui/core/colors/purple";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+// import purple from '@material-ui/core/colors/purple';
+// import Form from "./Form";
 
 const styles = theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    overflowX: 'auto',
+  card: {
+
+    margin: "0 auto",
+    marginTop: "7%",
+    marginBottom: "7%",
+    marginLeft: "20%",
+    marginRight: "20%",
+    padding: "5px 10px",
+    maxWidth: "100%",
+    color: "purple",
+
+
   },
-  table: {
-    minWidth: 700,
+
+  ideaby: {
+    marginLeft: "60%",
+
   },
+
+  description: {
+
+    marginBottom: "10%",
+    border: "solid",
+    borderWidth: "1px"
+
+  },
+
   button: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   },
-  leftIcon: {
-    marginRight: theme.spacing.unit,
+  input: {
+    display: "none"
   },
-  rightIcon: {
+  root: {
+    display: "flex",
+    flexWrap: "wrap"
+    // width: "100%",
+    // maxWidth: 360,
+    // // backgroundColor: theme.palette.background.paper
+    // backgroundColor: 'pink'
+  },
+  list: {
+    maxWidth: "auto",
+    // backgroundColor: theme.palette.background.paper
+    backgroundColor: "pink"
+  },
+  margin: {
+    margin: theme.spacing.unit
+  },
+  textField: {
     marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
-  iconSmall: {
-    fontSize: 20,
+  inline: {
+    display: "inline"
   },
+  avatar: {
+    margin: 10
+  }
+});
+const theme = createMuiTheme({
+  palette: {
+    primary: purple
+  }
 });
 
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-  id += 1;
-  return { id, name, calories, fat, carbs, protein };
+class MediaCard extends Component {
+  state = {
+    name: "",
+    title: "",
+    description: "",
+    ideas: []
+  };
+
+
+  componentDidMount() {
+    this.handleOnClick()
+  }
+
+  handleOnClick = () => {
+
+    let { name, title, description, data } = this.state; //object destructing
+    let obj = { name, title, description }
+
+
+
+    var url = 'http://localhost:8000/getIdea'
+
+    fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(obj), // body data type must match "Content-Type" header
+    }).then((response) => {
+      return response.json()
+    }).then((response) => {
+
+      if (response.status == 200) {
+        console.log('data fethed', response.data);
+
+        this.setState({ ideas: response.data })
+
+
+
+      }
+
+      else if (response.status == 204) {
+
+        console.log('unable to fetch', response.data)
+        alert("unable to fetch");
+
+      }
+
+      else { // when error
+
+        console.log('login fail: ', response.error)
+        alert(response.error.code)
+
+      }
+      // alert('Record has been insert successfully')
+    }).catch((err) => {
+      console.log('Error occured', err)
+      alert(err)
+    }) // parses response to JSON
+
+
+
+
+  };
+
+  render() {
+    const { classes } = this.props;
+    //console.log(this.state.data);
+
+    return (
+      <div>
+        {
+          this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
+            let idd = parseInt(localStorage.getItem('user_id'))
+            if (idd !== idea.user_id) return
+            return (
+              <div>
+                <Card className={classes.card}>
+                  <h2 align="center">{idea.idea_title}</h2>
+                  <CardContent>
+                    <div className={classes.description}><p><font size="5" face="Arial" >{idea.description}</font></p></div>
+                    <div className={classes.ideaby}><h4 align="right">Idea by : {idea.user_name}</h4></div>
+                    <div>
+                   <Button variant="contained" 
+                      color="secondary"
+                      className={classes.button}
+                      onClick={this.handleOnDelete}>
+                       Delete  
+                    </Button>
+
+                  <Button variant="contained"
+                    color="primary"
+                    className={classes.button}>
+                    onClick={this.handleOnEdit}
+                    edit
+                  </Button></div>
+                    
+                  </CardContent>
+                </Card>
+              </div>
+            )
+          })
+        }
+
+      </div>
+    );
+  }
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-function SimpleTable(props) {
-  const { classes } = props;
-
-  return (
-    <div>
-      <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Dessert (100g serving)</TableCell>
-              <TableCell align="right">Idea ID</TableCell>
-              <TableCell align="right">Idea Title</TableCell>
-              
-              <TableCell align="right">Delet Idea</TableCell>
-
-              <TableCell align="right">Protein (g)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map(row => (
-              <TableRow key={row.id}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right"><Button variant="contained" color="secondary" className={classes.button}>
-                Delete
-             <DeleteIcon className={classes.rightIcon} />
-              </Button></TableCell>
-                <TableCell align="right"><Button variant="contained" color="primary" className={classes.button}>
-       Edit
-        {/* This Button uses a Font Icon, see the installation instructions in the docs. */}
-       
-      </Button></TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Paper>
-    </div>
-  );
-}
-
-SimpleTable.propTypes = {
-  classes: PropTypes.object.isRequired,
+MediaCard.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(SimpleTable);
+export default withStyles(styles)(MediaCard);
+

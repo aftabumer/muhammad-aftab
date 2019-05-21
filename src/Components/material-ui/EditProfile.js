@@ -90,20 +90,27 @@ class MediaCard extends Component {
 
 
   handleF_nameChange = event => {
+    let newObj = this.state.user_info
+    newObj.f_name = event.target.value
     this.setState({
-      f_name: event.target.value
+      user_info: newObj
     });
   };
 
   handleL_nameChange = event => {
+
+    let newObj = this.state.user_info
+    newObj.l_name = event.target.value
     this.setState({
-      l_name: event.target.value
+      user_info: newObj
     });
   };
 
   handleEmailChange = event => {
+    let newObj = this.state.user_info
+    newObj.email = event.target.value
     this.setState({
-      email: event.target.value
+      user_info: newObj
     });
   };
 
@@ -187,12 +194,8 @@ class MediaCard extends Component {
     data.push(obj);
     this.setState({ data });
 
-    if (f_name == "" || l_name == "" || email == "" || password == "" || c_password == "") {
-      alert("please fill all the fields");
-
-
-    }
-    else if (this.state.password != this.state.c_password) {
+    
+     if (this.state.password != this.state.c_password) {
       alert("Passwords don't match");
     }
 
@@ -257,7 +260,7 @@ class MediaCard extends Component {
                   className={classes.margin}
                   label=""
                   name="name"
-                  value={this.state.f_name}
+                  value={this.state.user_info.f_name}
                   onChange={this.handleF_nameChange}
                   placeholder="First Name"
                   variant="outlined"

@@ -276,7 +276,7 @@ class MediaCard extends Component {
             className={classes.button}
             onClick={() => this.goto("/")}
           >
-            Cancle
+            Cancel
           </Button>
         </Card>
       </div>

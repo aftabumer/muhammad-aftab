@@ -17,6 +17,8 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import classNames from 'classnames';
+import MenuItem from '@material-ui/core/MenuItem';
 // import purple from '@material-ui/core/colors/purple';
 // import Form from "./Form";
 
@@ -34,6 +36,21 @@ const styles = theme => ({
 
 
   },
+
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    textField: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+    },
+    dense: {
+      marginTop: 16,
+    },
+    menu: {
+      width: 200,
+    },
 
   ideaby: {
     marginLeft: "60%",
@@ -165,7 +182,20 @@ class MediaCard extends Component {
                 <Card className={classes.card}>
                   <h2 align="center">{idea.idea_title}</h2>
                   <CardContent>
-                    <div className={classes.description}><p><font size="5" face="Arial" >{idea.description}</font></p></div>
+
+
+                  <TextField
+          id="outlined-multiline-flexible"
+          multiline
+          rowsMax="4"
+          value={idea.description}
+          onChange={this.handleChange}
+          className={classes.textField}
+          margin="normal"
+          fullWidth
+        />
+
+                    {/* <div className={classes.description}><p><font size="5" face="Arial" >{idea.description}</font></p></div> */}
                     <div className={classes.ideaby}><h4 align="right">Idea by : {idea.user_name}</h4></div>
                   </CardContent>
                 </Card>
