@@ -22,7 +22,6 @@ import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
   card: {
-
     margin: "0 auto",
     marginTop: "7%",
     marginBottom: "7%",
@@ -30,22 +29,17 @@ const styles = theme => ({
     marginRight: "20%",
     padding: "5px 10px",
     maxWidth: "100%",
-    color: "purple",
-
-
+    color: "purple"
   },
 
   ideaby: {
-    marginLeft: "60%",
-
+    marginLeft: "60%"
   },
 
   description: {
-
     marginBottom: "10%",
     border: "solid",
     borderWidth: "1px"
-
   },
 
   button: {
@@ -95,62 +89,56 @@ class MediaCard extends Component {
     ideas: []
   };
 
-
   componentDidMount() {
-    this.handleOnClick()
+    this.handleOnClick();
   }
 
   handleOnClick = () => {
-
     let { name, title, description, data } = this.state; //object destructing
-    let obj = { name, title, description }
+    let obj = { name, title, description };
 
-
-
-    var url = 'http://localhost:8000/getIdea'
+    var url = "http://localhost:8000/getIdea";
 
     fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(obj), // body data type must match "Content-Type" header
-    }).then((response) => {
-      return response.json()
-    }).then((response) => {
+      body: JSON.stringify(obj) // body data type must match "Content-Type" header
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        if (response.status == 200) {
+          console.log("data fethed", response.data);
 
-      if (response.status == 200) {
-        console.log('data fethed', response.data);
+          this.setState({ ideas: response.data });
+        } else if (response.status == 204) {
+          console.log("unable to fetch", response.data);
+          alert("unable to fetch");
+        } else {
+          // when error
 
-        this.setState({ ideas: response.data })
-
-
-
-      }
-
-      else if (response.status == 204) {
-
-        console.log('unable to fetch', response.data)
-        alert("unable to fetch");
-
-      }
-
-      else { // when error
-
-        console.log('login fail: ', response.error)
-        alert(response.error.code)
-
-      }
-      // alert('Record has been insert successfully')
-    }).catch((err) => {
-      console.log('Error occured', err)
-      alert(err)
-    }) // parses response to JSON
-
-
-
-
+          console.log("login fail: ", response.error);
+          alert(response.error.code);
+        }
+        // alert('Record has been insert successfully')
+      })
+      .catch(err => {
+        console.log("Error occured", err);
+        alert(err);
+      }); // parses response to JSON
   };
+
+  handleOnDelete = index => {
+    let ideas = this.state.ideas;
+    ideas.splice(index, 1);
+    this.setState({
+      ideas: ideas
+    });
+  };
+
 
   render() {
     const { classes } = this.props;
@@ -158,39 +146,50 @@ class MediaCard extends Component {
 
     return (
       <div>
-        {
-          this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
-            let idd = parseInt(localStorage.getItem('user_id'))
-            if (idd !== idea.user_id) return
+        {this.state.ideas &&
+          this.state.ideas.length &&
+          this.state.ideas.map(idea => {
+            let idd = parseInt(localStorage.getItem("user_id"));
+            if (idd !== idea.user_id) return;
             return (
               <div>
                 <Card className={classes.card}>
                   <h2 align="center">{idea.idea_title}</h2>
                   <CardContent>
-                    <div className={classes.description}><p><font size="5" face="Arial" >{idea.description}</font></p></div>
-                    <div className={classes.ideaby}><h4 align="right">Idea by : {idea.user_name}</h4></div>
+                    <div className={classes.description}>
+                      <p>
+                        <font size="5" face="Arial">
+                          {idea.description}
+                        </font>
+                      </p>
+                    </div>
+                    <div className={classes.ideaby}>
+                      <h4 align="right">Idea by : {idea.user_name}</h4>
+                    </div>
                     <div>
-                   <Button variant="contained" 
-                      color="secondary"
-                      className={classes.button}
-                      onClick={this.handleOnDelete}>
-                       Delete  
-                    </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        onClick={this.handleOnDelete}
+                      >
+                        Delete
+                      </Button>
 
-                  <Button variant="contained"
-                    color="primary"
-                    className={classes.button}>
-                    onClick={this.handleOnEdit}
-                    edit
-                  </Button></div>
-                    
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                      >
+                        onClick={this.handleOnEdit}
+                        edit
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
-            )
-          })
-        }
-
+            );
+          })}
       </div>
     );
   }
@@ -201,4 +200,3 @@ MediaCard.propTypes = {
 };
 
 export default withStyles(styles)(MediaCard);
-
