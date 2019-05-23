@@ -133,11 +133,8 @@ class MediaCard extends Component {
   };
 
   handleOnDelete = (idea,index) => {
-    let ideas = this.state.ideas;
-    ideas.splice(index, 1);
-    this.setState({
-      ideas: ideas
-    });
+
+   
 
    var idea_id=idea.idea_id
    var idea_title=idea.idea_title
@@ -163,7 +160,11 @@ class MediaCard extends Component {
        console.log('idea deleted', response.data)
        alert(idea_title+" deleted succesfully");
        //   window.location.href="/index.html";
-       
+       let ideas = this.state.ideas;
+       ideas.splice(index, 1);
+       this.setState({
+         ideas: ideas
+       });
      }
      else { // when error
        console.log('record is not inserted Error: ', response.error)

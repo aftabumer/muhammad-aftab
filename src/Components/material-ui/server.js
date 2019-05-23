@@ -177,7 +177,7 @@ app.post('/deleteIdea', (req, res) => {
               
 
     //  var sql = 'SELECT * FROM customers WHERE address = ' + mysql.escape(adr);
-    var sql = 'DELETE from idea where idea_id ='+mysql.escape(idea_id);
+    var sql = 'DELETE from idea where idea_id ='+ mysql.escape(idea_id);
     //  var sql ='SELECT * FROM signup WHERE email_id = ? and password= ?';
 
     connection.query(sql, [idea_id], (err, result) => {

@@ -6,6 +6,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Modal from "./Modal";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+
+import TextField from "@material-ui/core/TextField";
+import purple from "@material-ui/core/colors/purple";
 
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -86,6 +91,12 @@ class ButtonAppBar extends Component {
     this.goto("/MyIdeas")
   }
 
+  parkBeforLogin=()=>{
+
+    alert("you must be logged in to park an idea")
+    this.goto("/SignIn")
+  }
+
 
   render() {
 
@@ -99,9 +110,13 @@ class ButtonAppBar extends Component {
             <Typography variant="h5" color="inherit" className={classes.grow} onClick={() => this.goto("/")}>
               Park Ideas
           </Typography>
+
+    
             {
               !this.state.isSignIn ?
+              <div>
                 <Button color="inherit" onClick={this.handleOnLogin}>Login</Button>
+                <Button color="inherit" onClick={this.parkBeforLogin}>Park idea</Button></div>
                 :
                 <div>
                   <h4 color="inherit"><b>welcome {this.state.userName}</b></h4>

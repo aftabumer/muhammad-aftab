@@ -66,7 +66,8 @@ const styles = theme => ({
   },
 
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing.unit,
+    marginTop: "2%",
   },
   input: {
     display: "none"
@@ -96,13 +97,23 @@ const styles = theme => ({
   },
   avatar: {
     margin: 10
-  }
+  },
+ searchField: {
+   
+    marginTop: "1%",
+    marginLeft:"55%",
+    align:"left",
+  
+  },
+
+
 });
 const theme = createMuiTheme({
   palette: {
     primary: purple
   }
 });
+
 
 class MediaCard extends Component {
   state = {
@@ -175,6 +186,26 @@ class MediaCard extends Component {
 
     return (
       <div>
+
+        <div className={classes.searchField}>
+
+        <TextField
+                  className={classes.searchField}
+                  label="Search"
+                  name="name"
+                  value={this.state.email}
+                  onChange={this.handleEmailChange}
+                  placeholder="Idea Title"
+                  variant="outlined"
+                  id="mui-theme-provider-outlined-input"
+                  type="email"
+                  validators={['required', 'isEmail']}
+                />
+                 
+      <Button color="primary" className={classes.button}>
+        SEARCH IDEA
+      </Button>
+                </div>
         {
           this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
             return (
