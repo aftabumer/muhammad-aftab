@@ -17,12 +17,12 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import { runInThisContext } from "vm";
 // import purple from '@material-ui/core/colors/purple';
 // import Form from "./Form";
 
 const styles = theme => ({
   card: {
-
     margin: "0 auto",
     marginTop: "7%",
     marginBottom: "7%",
@@ -30,22 +30,17 @@ const styles = theme => ({
     marginRight: "20%",
     padding: "5px 10px",
     maxWidth: "100%",
-    color: "purple",
-
-
+    color: "purple"
   },
 
   ideaby: {
-    marginLeft: "60%",
-
+    marginLeft: "60%"
   },
 
   description: {
-
     marginBottom: "10%",
     border: "solid",
     borderWidth: "1px"
-
   },
 
   button: {
@@ -88,245 +83,161 @@ const theme = createMuiTheme({
 });
 
 class MediaCard extends Component {
-
-  constructor(props) {
-    super(props)
-   var user_id= window.localStorage.getItem('user_id')
-   var user_name=window.localStorage.getItem('f_name')
-
-  this.state = {
-    name: user_name,
+  state = {
+    name: "",
     title: "",
     description: "",
-    e_name: "",
-    e_title: "",
-    e_description: "",
-    ideas: [],
-    user_id: user_id,
-
+    ideas: []
   };
-}
 
   componentDidMount() {
-    this.handleOnClick()
+    this.handleOnClick();
   }
 
-  handleOnChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
-
-  handleEdit = index => {
-    let ideas = this.state.ideas.map((item, i) =>
-      i === index ? { ...item, editStatus: true } : item
-    );
-
-    this.setState({ ideas });
-  };
-
-  
-  handleSave = index => {
-    let ideas = this.state.ideas.map((item, i) =>
-    i === index
-    ? {
-      ...item,
-      editStatus: false,
-      name: this.state.e_name,
-      title: this.state.e_title,
-            description: this.state.e_description
-          }
-        : item
-    );
-
-    this.setState({ ideas });
-  };
-  
-  handleOnDelete = index => {
-    let ideas = this.state.ideas;
-    ideas.splice(index, 1);
-    this.setState({
-      ideas: ideas
-    });
-  };
-
-
-
   handleOnClick = () => {
-
     let { name, title, description, data } = this.state; //object destructing
-    let obj = { name, title, description }
+    let obj = { name, title, description };
 
-
-
-    var url = 'http://localhost:8000/getIdea'
+    var url = "http://localhost:8000/getIdea";
 
     fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(obj), // body data type must match "Content-Type" header
-    }).then((response) => {
-      return response.json()
-    }).then((response) => {
+      body: JSON.stringify(obj) // body data type must match "Content-Type" header
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        if (response.status == 200) {
+          console.log("data fethed", response.data);
 
-      if (response.status == 200) {
-        console.log('data fethed', response.data);
+          this.setState({ ideas: response.data });
+        } else if (response.status == 204) {
+          console.log("unable to fetch", response.data);
+          alert("unable to fetch");
+        } else {
+          // when error
 
-        this.setState({ ideas: response.data })
-      }
-
-      else if (response.status == 204) {
-
-        console.log('unable to fetch', response.data)
-        alert("unable to fetch");
-
-      }
-
-      else { // when error
-
-        console.log('login fail: ', response.error)
-        alert(response.error.code)
-
-      }
-      // alert('Record has been insert successfully')
-    }).catch((err) => {
-      console.log('Error occured', err)
-      alert(err)
-    }) // parses response to JSON
-
-
-
-
+          console.log("login fail: ", response.error);
+          alert(response.error.code);
+        }
+        // alert('Record has been insert successfully')
+      })
+      .catch(err => {
+        console.log("Error occured", err);
+        alert(err);
+      }); // parses response to JSON
   };
+
+  handleOnDelete = (idea,index) => {
+    let ideas = this.state.ideas;
+    ideas.splice(index, 1);
+    this.setState({
+      ideas: ideas
+    });
+
+   var idea_id=idea.idea_id
+   var idea_title=idea.idea_title
+   var url = 'http://localhost:8000/deleteIdea'
+
+   
+   let obj={
+       idea_id
+   }
+
+   fetch(url, {
+     method: "POST", // *GET, POST, PUT, DELETE, etc.
+     headers: {
+       "Content-Type": "application/json"
+     },
+     body: JSON.stringify(obj), // body data type must match "Content-Type" header
+
+   }).then((response) => {
+
+     return response.json()
+   }).then((response) => {
+     if (response.status == 200) {
+       console.log('idea deleted', response.data)
+       alert(idea_title+" deleted succesfully");
+       //   window.location.href="/index.html";
+       
+     }
+     else { // when error
+       console.log('record is not inserted Error: ', response.error)
+
+       alert("unable to delete");
+     
+
+     }
+     // alert('Record has been insert successfully')
+   }).catch((err) => {
+     console.log('Error occured in deletion', err)
+      alert(err)
+   }) // parses response to JSON  
+
+
+ };
+
+
+
+
+
 
   render() {
     const { classes } = this.props;
     //console.log(this.state.data);
-    
 
     return (
       <div>
-        {
-          this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
-            
-            let idd = parseInt(localStorage.getItem('user_id'))
-            if (idd !== idea.user_id) return
+        {this.state.ideas &&
+          this.state.ideas.length &&
+          this.state.ideas.map(idea => {
+            let idd = parseInt(localStorage.getItem("user_id"));
+            if (idd !== idea.user_id) return;
             return (
               <div>
                 <Card className={classes.card}>
                   <h2 align="center">{idea.idea_title}</h2>
                   <CardContent>
+                    <div className={classes.description}>
+                      <p>
+                        <font size="5" face="Arial">
+                          {idea.description}
+                        </font>
+                      </p>
+                    </div>
+                    <div className={classes.ideaby}>
+                      <h4 align="right">Idea by : {idea.user_name}</h4>
+                    </div>
+                    <div>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        onClick={()=>this.handleOnDelete(idea)}
+                              
+                      >
+                        Delete
+                      </Button>
 
-
-                    <TextField
-                      id="outlined-multiline-flexible"
-                      multiline
-                      rowsMax="4"
-                      value={idea.description}
-                      onChange={this.handleChange}
-                      className={classes.textField}
-                      margin="normal"
-                      fullWidth
-                    />
-
-
-                 
-                    {/* <div className={classes.description}><p><font size="5" face="Arial" >{idea.description}</font></p></div> */}
-                    <div className={classes.ideaby}><h4 align="right">Idea by : {idea.user_name}</h4></div>
-
-                 
-
-                  </CardContent>
-
-                  {this.state.data.map((item, i) => {  
-                    return (
-                      <div>
-
-                        <List
-                          className={classes.list}
-                          container
-                          justify="center"
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                      
+                        onClick={this.handleOnEdit}
                         >
-                          <ListItem alignItems="flex-center">
-                            <ListItemText
-                              primary={
-                                item.editStatus ? (
-                                  <input
-                                    name="e_name"
-                                    value={this.state.e_name}
-                                    onChange={this.handleOnChange}
-                                  />
-                                ) : (
-                                  item.name
-                                )
-                              }
-                              secondary={
-                                <React.Fragment>
-                                  <Typography
-                                    component="span"
-                                    className={classes.inline}
-                                    color="textPrimary"
-                                  >
-                                    {item.editStatus ? (
-                                      <input
-                                        name="e_title"
-                                        value={this.state.e_title}
-                                        onChange={this.handleOnChange}
-                                      />
-                                    ) : (
-                                      item.title
-                                    )}
-                                  </Typography>
-                                  <br />
-                                  {item.editStatus ? (
-                                    <input
-                                      name="e_description"
-                                      value={this.state.e_description}
-                                      onChange={this.handleOnChange}
-                                    />
-                                  ) : (
-                                    item.description
-                                  )}
-                                </React.Fragment>
-                              }
-                            />
-                          </ListItem>
-                          <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={
-                      item.editStatus
-                        ? () => this.handleSave(i)
-                        : () => this.handleEdit(i)
-                    }
-                    size="small"
-                  >
-                    Edit
-                    {item.editStatus ? "Save" : "Edit"}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                    size="small"
-                    onClick={this.handleOnDelete}
-                  >
-                    Delete
-                  </Button>
-                        </List>
-                      </div>
-                    );
-                  })}
-
+                        edit
+                      </Button>
+                    </div>
+                  </CardContent>
                 </Card>
               </div>
-            )
-          })
-        }
-
+            );
+          })}
       </div>
     );
   }
@@ -337,4 +248,3 @@ MediaCard.propTypes = {
 };
 
 export default withStyles(styles)(MediaCard);
-
