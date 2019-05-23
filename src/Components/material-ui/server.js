@@ -146,15 +146,18 @@ app.post('/getProfile', (req, res) => {
 })
 
 app.post('/updateProfile', (req, res) => {
+
     let {user_id,f_name, l_name, email, password} = req.body
 
     //UPDATE signup SET f_name="Dpak",l_name="yes" WHERE User_id=1
 
     
-    var sql = 'UPDATE signup SET f_name ' + mysql.escape(f_name) + ', l_name= ' + mysql.escape(l_name) + ', email= ' + mysql.escape(email) + ', password= ' + mysql.escape(password)
-    'WHERE user_id=' + mysql.escape(user_id);
+    var sql = 'UPDATE signup SET f_name =' + mysql.escape(f_name) + ', l_name = ' + mysql.escape(l_name) + ', email = ' + mysql.escape(email) + ', password = ' + mysql.escape(password)
+    'WHERE user_id =' + mysql.escape(user_id);
+   
+    
 
-    connection.query(sql,[f_name][l_name][email][password][user_id], (err, result) => {
+    connection.query(sql,[f_name][l_name][email][password][user_id],(err, result) => {
         if (err) {
             console.log('Errrrrrrrrrrrrrrrrrrrrrrrrrr', err)
             res.status(500).send(JSON.stringify({ error: err, status: 500 }))

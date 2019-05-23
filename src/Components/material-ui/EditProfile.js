@@ -106,6 +106,8 @@ class MediaCard extends Component {
     });
   };
 
+  
+
   handleEmailChange = event => {
     let newObj = this.state.user_info
     newObj.email = event.target.value
@@ -141,7 +143,7 @@ class MediaCard extends Component {
     
     var user_id = window.localStorage.getItem('user_id')
 
-    let {f_name, l_name, email, password, c_password, data } = this.state;
+    let {f_name, l_name, email, password, c_password, data ,user_info} = this.state;
 
     let obj = {
       user_id: user_id
@@ -173,11 +175,15 @@ class MediaCard extends Component {
         } else {
           // when error
           console.log("failed to fecth info: ", response.error);
+          alert(response.error)
+          debugger
         }
         // alert('Record has been insert successfully')
       })
       .catch(err => {
         console.log("Error occured in insertion", err);
+        alert(err)
+        debugger
         // alert('Error in insertion')
       }); // parses response to JSON
 
@@ -190,12 +196,16 @@ class MediaCard extends Component {
     var user_id = window.localStorage.getItem('user_id')
 
     let {f_name, l_name, email, password, c_password, data } = this.state; //object destructing
+
+    
+    
     let obj = { user_id,f_name, l_name, email, password, c_password };
     data.push(obj);
     this.setState({ data });
 
+
     
-     if (this.state.password != this.state.c_password) {
+      if (this.state.password != this.state.c_password) {
       alert("Passwords don't match");
     }
 
@@ -238,7 +248,8 @@ class MediaCard extends Component {
         })
         .catch(err => {
           console.log("Error occured in insertion", err);
-          // alert('Error in insertion')
+          alert(err)
+          debugger
         }); // parses response to JSON
 
     }
