@@ -101,7 +101,7 @@ const styles = theme => ({
   searchField: {
 
     marginTop: "1%",
-    marginLeft: "55%",
+    marginLeft: "22%",
     align: "left",
 
   },
@@ -120,22 +120,27 @@ class MediaCard extends Component {
     name: "",
     title: "",
     description: "",
+    SearchKeyWord: "",
     ideas: []
   };
 
 
-  componentDidMount() {
-    this.handleOnClick()
-  }
+  handleSearchKeyWordChange = event => {
+    this.setState({
+      SearchKeyWord: event.target.value
+    });
+  };
 
   handleOnClick = () => {
 
-    let { name, title, description, data } = this.state; //object destructing
-    let obj = { name, title, description }
+    let { name, title, description,SearchKeyWord, data } = this.state; //object destructing
+    
+    let obj = { SearchKeyWord }
+   
+    
+   
 
-
-
-    var url = 'http://localhost:8000/getIdea'
+    var url = 'http://localhost:8000/searchIdea'
 
     fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -149,23 +154,21 @@ class MediaCard extends Component {
 
       if (response.status == 200) {
         console.log('data fethed', response.data);
-
         this.setState({ ideas: response.data })
-
-
-
+        
       }
 
       else if (response.status == 204) {
 
         console.log('unable to fetch', response.data)
         alert("unable to fetch");
-
+        
+       
       }
 
       else { // when error
 
-        console.log('login fail: ', response.error)
+        console.log('unable to fetch: ', response.error)
         alert(response.error.code)
 
       }
@@ -187,6 +190,25 @@ class MediaCard extends Component {
     return (
       <div>
 
+        <div className={classes.searchField}>
+
+          <TextField
+            className={classes.searchField}
+            label="Search"
+            name="name"
+            value={this.state.SearchKeyWord}
+            onChange={this.handleSearchKeyWordChange}
+            placeholder="Idea Title"
+            variant="outlined"
+            id="mui-theme-provider-outlined-input"
+            type="email"
+          />
+
+          <Button color="primary" className={classes.button}
+          onClick={this.handleOnClick}>
+            SEARCH IDEA
+          </Button>
+        </div>
         {
           this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
             return (

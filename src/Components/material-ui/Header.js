@@ -97,6 +97,9 @@ class ButtonAppBar extends Component {
     this.goto("/SignIn")
   }
 
+  homePage=()=>{
+    this.goto("/idea")
+  }
 
   render() {
 
@@ -120,9 +123,12 @@ class ButtonAppBar extends Component {
                 :
                 <div>
                   <h4 color="inherit"><b>welcome {this.state.userName}</b></h4>
-                  <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
+                  <Button color="inherit" onClick={this.homePage}>Home</Button>
+                  
                   <Button color="inherit" onClick={this.handleOnPostIdea}>Park Idea</Button>
                   <Button color="inherit" onClick={this.handleOnMyIdeas}>My Ideas</Button>
+                 <Button color="inherit" onClick={this.handleOnlogout}>Logout</Button>
+                  
                 </div>
 
 
