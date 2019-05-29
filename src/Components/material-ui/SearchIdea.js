@@ -138,6 +138,11 @@ class MediaCard extends Component {
     let obj = { SearchKeyWord }
    
     
+   if(SearchKeyWord==""){
+     alert("Fill the empty fields")
+   }
+   else{
+
    
 
     var url = 'http://localhost:8000/searchIdea'
@@ -161,7 +166,7 @@ class MediaCard extends Component {
       else if (response.status == 204) {
 
         console.log('unable to fetch', response.data)
-        alert("unable to fetch");
+        alert(response.error);
         
        
       }
@@ -180,7 +185,7 @@ class MediaCard extends Component {
 
 
 
-
+  }
   };
 
   render() {
@@ -190,7 +195,7 @@ class MediaCard extends Component {
     return (
       <div>
 
-        <div className={classes.searchField}>
+        <div className={classes.searchField} >
 
           <TextField
             className={classes.searchField}
@@ -213,7 +218,7 @@ class MediaCard extends Component {
           this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
             return (
               <div>
-                <Card className={classes.card}>
+                <Card className={classes.card} style ={{background:'#e0e0e0'}}>
                   <h2 align="center">{idea.idea_title}</h2>
                   <CardContent>
 

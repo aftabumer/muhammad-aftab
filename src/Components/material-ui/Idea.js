@@ -191,7 +191,7 @@ class MediaCard extends Component {
           this.state.ideas && this.state.ideas.length && this.state.ideas.map(idea => {
             return (
               <div>
-                <Card className={classes.card}>
+                <Card className={classes.card} style ={{background:'#e0e0e0'}}>
                   <h2 align="center">{idea.idea_title}</h2>
                   <CardContent>
 

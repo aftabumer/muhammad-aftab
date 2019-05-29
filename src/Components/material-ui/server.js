@@ -197,15 +197,16 @@ app.post('/searchIdea', (req, res) => {
 
 
     let {
-        searchKeyWord
+        SearchKeyWord
         } = req.body
 
     //  var sql = 'SELECT * FROM customers WHERE address = ' + mysql.escape(adr);
    
     //
   
-    //  var sql ='SELECT * FROM signup WHERE email_id = ? and password= ?';
-    connection.query("SELECT * FROM idea where idea_title like = '%?%'", [searchKeyWord],(err, result)=>{
+    //  var sql ='SELECT * FROM signup WHERE email_id = ? and password= ?';4
+    console.log('SearchKeyWord', SearchKeyWord)
+    connection.query(`SELECT * FROM idea where idea_title like '%${SearchKeyWord}%'` ,(err, result)=>{
 
     //connection.query(sql,(err, result)=> {
         if (err) {
@@ -220,7 +221,7 @@ app.post('/searchIdea', (req, res) => {
             }
             else {
                 console.log("unable to fetch ideas");
-                res.status(500).send({ error: 'unable to fetch ideas', status: 204 })
+                res.status(200).send({ error: 'no idea found', status: 204 })
                 //res.status(204).send({ data: req.body, status: 204 })
             }
         }

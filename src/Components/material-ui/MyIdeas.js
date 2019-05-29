@@ -115,7 +115,13 @@ class MediaCard extends Component {
         if (response.status == 200) {
           console.log("data fethed", response.data);
 
-          this.setState({ ideas: response.data });
+         
+          if(response.data && response.data.length){
+            this.setState({ ideas: response.data });
+          }
+          else{
+            alert("no ideas posted yet")
+          }
         } else if (response.status == 204) {
           console.log("unable to fetch", response.data);
           alert("unable to fetch");
@@ -288,7 +294,7 @@ class MediaCard extends Component {
             if (idd !== idea.user_id) return;
             return (
               <div>
-                <Card className={classes.card}>
+                <Card className={classes.card} style ={{background:'#e0e0e0'}}>
                   <h2 align="center">{idea.idea_title}</h2>
                   <CardContent>
                     <div className={classes.description}>

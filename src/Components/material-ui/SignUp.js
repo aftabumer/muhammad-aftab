@@ -121,6 +121,11 @@ class MediaCard extends Component {
     this.props.history.push(path);
   };
 
+  validateEmail=(email)=> {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
   handleOnClick = (e) => {
     let { f_name, l_name, email, password, c_password, data } = this.state; //object destructing
     let obj = { f_name, l_name, email, password, c_password };
@@ -132,6 +137,11 @@ class MediaCard extends Component {
 
    
     }
+    
+    else if(!this.validateEmail(email)){
+     alert("email is invalid")
+    }
+
     else if (this.state.password != this.state.c_password) {
       alert("Passwords don't match");
     }
